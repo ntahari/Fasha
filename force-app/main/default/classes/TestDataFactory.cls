@@ -74,11 +74,8 @@ public class TestDataFactory {
             Quantity = quantity, 
             UnitPrice = unitPrice);
             insert oi1;
-            System.debug('quantity ordersItem: ' + oi1.Quantity);
-            System.debug('unite price ordersItem: ' + oi1.UnitPrice);
         }
         update orders;
-        System.debug('total amount : ' + orders[0].TotalAmount);
     }
     
     // Create a product with PricebookEntry
