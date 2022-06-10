@@ -1,7 +1,10 @@
 <apex:page controller="MyTeamOrdersController" >
+    <style type="text/css">
+        .sample {color: #de1a1a; font-weight: bold}
+    </style>
         <div>
-            <h1>
-                Sum of my team orders: <apex:outputText value="{!sumOrders}" />
-            </h1>
+            <p>
+                Sum of my team orders : <apex:outputText value="{!sumOrders}" styleClass="sample" />
+            </p>
         </div>
 </apex:page>

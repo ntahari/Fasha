@@ -5,7 +5,15 @@ public with sharing class QueriesService {
     public static String AllAcountsWithOrders() {
         return 'SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Order WHERE status = \'Ordered\')';
     }
-    
+
+    public static List<Account> AccountsList() {
+        List<Account> accounts = [SELECT Id, Turnover__c 
+        // (SELECT TotalAmount, AccountId FROM Orders WHERE status = 'Ordered') 
+        FROM Account 
+        WHERE Id IN (SELECT AccountId FROM Order WHERE status = 'Ordered')];
+        return accounts;
+    }
+
     public static List<Account> AccountsWithOrders(set<Id> setAccountIds) {
         List<Account> accounts = [SELECT Id, Turnover__c, 
         (SELECT TotalAmount, AccountId FROM Orders WHERE status = 'Ordered') 
@@ -20,6 +28,7 @@ public with sharing class QueriesService {
         LIMIT :limitOrder];
         return orders;
     }
+
 
 }    
 

@@ -9,7 +9,6 @@ public with sharing class AccountService {
             for (Integer j = 0; j < acc.Orders.size(); j++) {
                 acc.Turnover__c = acc.Turnover__c + acc.Orders[j].TotalAmount;
             }
-            System.debug('chiffre affaire= ' + acc);
         }
         update accounts;
 
