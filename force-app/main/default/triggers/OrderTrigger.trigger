@@ -1,7 +1,6 @@
 trigger OrderTrigger on Order (before update, after update) {
     if (trigger.isBefore) {
         if (trigger.isUpdate) {
-            //execute function beforre update
             OrderTriggerHandler.CalculNetAmounts(trigger.new);
         }
         // if (Trigger.isInsert()) {
@@ -14,7 +13,6 @@ trigger OrderTrigger on Order (before update, after update) {
     }
     if (trigger.isAfter) {
         if (trigger.isUpdate) {
-            //execute function after update
             OrderTriggerHandler.UpdateAccountTurnovers(trigger.new);
         }
         // if (Trigger.isInsert()) {
