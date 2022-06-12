@@ -7,10 +7,11 @@ public with sharing class AccountService {
             Account acc = accounts[i];
             acc.Turnover__c = 0;
             for (Integer j = 0; j < acc.Orders.size(); j++) {
-                acc.Turnover__c = acc.Turnover__c + acc.Orders[j].TotalAmount;
+                acc.Turnover__c = acc.Turnover__c + acc.Orders[j].NetAmount__c;
             }
         }
         update accounts;
+        System.debug('turnover mclass accountservice: '+ accounts);
 
     }
 }

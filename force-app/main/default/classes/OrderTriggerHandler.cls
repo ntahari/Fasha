@@ -6,7 +6,11 @@ public with sharing class OrderTriggerHandler {
             if (newOrder.ShipmentCost__c == null) {
                 newOrder.ShipmentCost__c = 0;
             }
+            System.debug('shipment amount: '+ newOrder.ShipmentCost__c);
+            System.debug('total amount: '+ newOrder.TotalAmount);
+            System.debug('account id: '+ newOrder.AccountId);
             newOrder.NetAmount__c = newOrder.TotalAmount - newOrder.ShipmentCost__c;
+
         }
     }
 

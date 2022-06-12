@@ -1,6 +1,7 @@
 @isTest
 private class TestMyTeamOrders {
-    @isTest static void TestSumOrders() {
+    @isTest 
+    static void TestSumOrders() {
         //Add Acounts 
         List<Account> accts = TestDataFactory.createAccounts(1);
 

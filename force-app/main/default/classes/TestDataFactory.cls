@@ -1,60 +1,45 @@
 @isTest
-public class TestDataFactory {
+public class TestDataFactory{
     static final Id PRICEBOOK2ID = Test.getStandardPricebookId();
-    public static List<Account> createAccountsWithOrders(Integer numAccts, Integer numOrdersPerAcct) {
-        
-        //Add Acounts 
-        List<Account> accts = createAccounts(numAccts);
+    public static List<Account> createAccountsWithOrders(Integer numAccts, Integer numOrdersPerAcct){
 
-        // Add a product
-        // PricebookEntry pbe = creatProduct(1020);
+        //Add Acounts
+        List<Account> accts = createAccounts(numAccts);
 
         // Add Orders with shipmentCost = 100
         List<Order> orders = createOrders(accts, numOrdersPerAcct, 100);
 
-        // Add OrderItem with quantity of item = 10 AND price unity = 150 and Update Orders 
+        // Add OrderItem with quantity of item = 10 AND price unity = 150 and Update Orders
         createOrderItem(orders, 10, 150);
 
         return accts;
-
     }
 
-    public static List<Account> createAccounts(Integer numAccts) {
+    public static List<Account> createAccounts(Integer numAccts){
         List<Account> accts = new List<Account>();
-        for(Integer i=0;i<numAccts;i++) {
-            Account a = new Account(Name='TestAccount' + i);
+        for (Integer i = 0; i < numAccts; i++){
+            Account a = new Account(Name = 'TestAccount' + i);
             accts.add(a);
         }
         insert accts;
         return accts;
     }
-    
+
     //Create Orders
-    public static List<Order> createOrders(List<Account> accts, Integer numOfOrders, Integer shipmentCost) {
+    public static List<Order> createOrders(List<Account> accts, Integer numOfOrders, Integer shipmentCost){
         List<Order> orders = new List<Order>();
-        for (Integer i=0;i<accts.size();i++) {
+        // For each account just inserted, add contract
+        List<Contract> cons = creatContract(accts);
+        for (Integer i = 0; i < accts.size(); i++){
             Account acct = accts[i];
-
-            // For each account just inserted, add contract
-            Contract con = new Contract(
-                AccountId = acct.Id,
-                Status = 'Draft',
-                StartDate = System.today(),
-                ContractTerm = 3
-            );
-            insert con;
-            con.Status = 'Activated';
-            update con;
-
-            // For each account just inserted, add orders
-            for (Integer j=0;j<numOfOrders;j++) {
-                orders.add(new Order(AccountId = acct.Id,
-                                    ContractId = con.Id,
-                                    EffectiveDate= System.today(),
-                                    Status = 'Draft',
-                                    ShipmentCost__c = ShipmentCost,
-                                    Pricebook2Id = PRICEBOOK2ID));  
-                
+            for (Integer k = 0; k < cons.size(); k++) {
+                Contract con = cons[i];
+            
+                // For each account just inserted, add orders
+                for (Integer j = 0; j < numOfOrders; j++){
+                    orders.add(new Order(AccountId = acct.Id, ContractId = con.Id, EffectiveDate = System.today(), Status = 'Draft', ShipmentCost__c = ShipmentCost, Pricebook2Id = PRICEBOOK2ID));
+                    
+                }
             }
         }
         // Insert all orders for all accounts.
@@ -62,37 +47,49 @@ public class TestDataFactory {
         return orders;
     }
 
-    // create order Item 
-    public static void createOrderItem(List<Order> orders, Integer quantity, Integer unitPrice) {
+    // create order Item
+    public static void createOrderItem(List<Order> orders, Integer quantity, Integer unitPrice){
         PricebookEntry pbe = creatProduct(1020);
-        for (Integer i = 0; i < orders.size(); i++) {
+        List<OrderItem> ordersIt = new List<OrderItem>();
+        for (Integer i = 0; i < orders.size(); i++){
             Order ord = orders[i];
             ord.Status = 'Ordered';
             // Create an order item
-            OrderItem oi1 = new OrderItem (OrderId = ord.Id, 
-            PricebookEntryId = pbe.Id, 
-            Quantity = quantity, 
-            UnitPrice = unitPrice);
-            insert oi1;
+            ordersIt.add(new OrderItem(OrderId = ord.Id, PricebookEntryId = pbe.Id, Quantity = quantity, UnitPrice = unitPrice));
         }
+        insert ordersIt;
         update orders;
     }
-    
+
     // Create a product with PricebookEntry
+    public static PricebookEntry creatProduct(Integer unitPrice){
+        Product2 pd1 = new Product2(Name = 'Chemise Verte longue XYX', Family = 'Chemise');
+        insert pd1;
+        //Create the PricebookEntry
+        PricebookEntry pbe = new PricebookEntry(Pricebook2Id = PRICEBOOK2ID, Product2Id = pd1.Id, UnitPrice = unitPrice, IsActive = true);
+        insert pbe;
+        return pbe;
+    }
+    private static List<Contract> creatContract(List<Account> accts) {
+        List<Contract> cons = new List<Contract>();
+        for (Integer i=0;i<accts.size();i++) {
+            Account acct = accts[i];
 
-    public static PricebookEntry creatProduct (Integer unitPrice){
-    Product2 pd1 = new Product2(Name = 'Chemise Verte longue XYX', Family = 'Chemise');
-    insert pd1;
-    //Create the PricebookEntry
-    PricebookEntry pbe = new PricebookEntry(
-        Pricebook2Id = PRICEBOOK2ID,
-        Product2Id = pd1.Id,
-        UnitPrice = unitPrice,
-        IsActive = true
-    );
-    insert pbe;
-    return pbe;
-   }
+            // For each account just inserted, add contract
+            cons.add(new Contract(
+                AccountId = acct.Id,
+                Status = 'Draft',
+                StartDate = System.today(),
+                ContractTerm = 3
+            ));
+        }
+        insert cons;
+        for (Integer j = 0; j < cons.size(); j++) {
+            Contract con = cons[j];
+            con.Status = 'Activated';
+        }
+        update cons;
+        return cons;
+    }
 
-  
 }

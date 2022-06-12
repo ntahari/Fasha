@@ -16,7 +16,7 @@ public with sharing class QueriesService {
 
     public static List<Account> AccountsWithOrders(set<Id> setAccountIds) {
         List<Account> accounts = [SELECT Id, Turnover__c, 
-        (SELECT TotalAmount, AccountId FROM Orders WHERE status = 'Ordered') 
+        (SELECT TotalAmount,NetAmount__c, AccountId FROM Orders WHERE status = 'Ordered') 
         FROM Account WHERE Id IN :setAccountIds];
         return accounts;
     }
