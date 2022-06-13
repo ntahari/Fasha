@@ -2,7 +2,7 @@ public with sharing class QueriesService {
     public QueriesService() {
 
     }
-    public static String AllAcountsWithOrders() {
+    public static String AllAcountsQueryLocator() {
         return 'SELECT Id FROM Account WHERE Id IN (SELECT AccountId FROM Order WHERE status = \'Ordered\')';
     }
 
@@ -16,7 +16,7 @@ public with sharing class QueriesService {
 
     public static List<Account> AccountsWithOrders(set<Id> setAccountIds) {
         List<Account> accounts = [SELECT Id, Turnover__c, 
-        (SELECT TotalAmount,NetAmount__c, AccountId FROM Orders WHERE status = 'Ordered') 
+        (SELECT TotalAmount,NetAmount__c, ShipmentCost__c, AccountId FROM Orders WHERE status = 'Ordered') 
         FROM Account WHERE Id IN :setAccountIds];
         return accounts;
     }
@@ -27,6 +27,13 @@ public with sharing class QueriesService {
         AND Status = 'Ordered'
         LIMIT :limitOrder];
         return orders;
+    }
+
+    public static List<Account> AllAccountsWithOrders() {
+        List<Account> accounts = [SELECT Id, Turnover__c, 
+        (SELECT TotalAmount,NetAmount__c, ShipmentCost__c, AccountId FROM Orders WHERE status = 'Ordered') 
+        FROM Account ];
+        return accounts;
     }
 
 

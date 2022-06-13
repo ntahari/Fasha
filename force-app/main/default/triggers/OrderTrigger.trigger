@@ -2,7 +2,6 @@ trigger OrderTrigger on Order (before update, after update) {
     if (trigger.isBefore) {
         if (trigger.isUpdate) {
             OrderTriggerHandler.CalculNetAmounts(trigger.new);
-            System.debug('trigger befor update');
         }
         // if (Trigger.isInsert()) {
         //     //execute functions before insert

@@ -15,7 +15,6 @@ private class TestMyTeamOrders {
         Test.startTest();
         Decimal totalSumOrders = MyTeamOrdersController.sumOrders;
         Test.stopTest();
-        System.debug('total des sommes orders: ' + totalSumOrders);
 
         // total sum orders(7500) = num of orders(5) * totalAmount(1500) 
         System.assertEquals(7500, totalSumOrders);

@@ -11,7 +11,6 @@ public with sharing class AccountService {
             }
         }
         update accounts;
-        System.debug('turnover mclass accountservice: '+ accounts);
 
     }
 }

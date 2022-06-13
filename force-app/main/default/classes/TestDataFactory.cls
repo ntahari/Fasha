@@ -1,17 +1,17 @@
 @isTest
 public class TestDataFactory{
     static final Id PRICEBOOK2ID = Test.getStandardPricebookId();
-    public static List<Account> createAccountsWithOrders(Integer numAccts, Integer numOrdersPerAcct){
 
+    // Create list of Accounts with their orders 
+    public static List<Account> createAccountsWithOrders(Integer numAccts, Integer numOrdersPerAcct){
         //Add Acounts
         List<Account> accts = createAccounts(numAccts);
-
         // Add Orders with shipmentCost = 100
         List<Order> orders = createOrders(accts, numOrdersPerAcct, 100);
-
         // Add OrderItem with quantity of item = 10 AND price unity = 150 and Update Orders
         createOrderItem(orders, 10, 150);
-
+        List<Account> acctsData = [SELECT Turnover__c FROM Account];
+        System.debug('account in createAccountOrders: '+ acctsData);
         return accts;
     }
 
@@ -30,6 +30,7 @@ public class TestDataFactory{
         List<Order> orders = new List<Order>();
         // For each account just inserted, add contract
         List<Contract> cons = creatContract(accts);
+        
         for (Integer i = 0; i < accts.size(); i++){
             Account acct = accts[i];
             for (Integer k = 0; k < cons.size(); k++) {
@@ -38,7 +39,6 @@ public class TestDataFactory{
                 // For each account just inserted, add orders
                 for (Integer j = 0; j < numOfOrders; j++){
                     orders.add(new Order(AccountId = acct.Id, ContractId = con.Id, EffectiveDate = System.today(), Status = 'Draft', ShipmentCost__c = ShipmentCost, Pricebook2Id = PRICEBOOK2ID));
-                    
                 }
             }
         }
@@ -70,6 +70,7 @@ public class TestDataFactory{
         insert pbe;
         return pbe;
     }
+    // Create Contract for each account
     private static List<Contract> creatContract(List<Account> accts) {
         List<Contract> cons = new List<Contract>();
         for (Integer i=0;i<accts.size();i++) {
@@ -84,6 +85,7 @@ public class TestDataFactory{
             ));
         }
         insert cons;
+        //update contract's statu
         for (Integer j = 0; j < cons.size(); j++) {
             Contract con = cons[j];
             con.Status = 'Activated';
