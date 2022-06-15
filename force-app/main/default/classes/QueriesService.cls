@@ -8,16 +8,15 @@ public with sharing class QueriesService {
 
     public static List<Account> AccountsList() {
         List<Account> accounts = [SELECT Id, Turnover__c 
-        // (SELECT TotalAmount, AccountId FROM Orders WHERE status = 'Ordered') 
         FROM Account 
         WHERE Id IN (SELECT AccountId FROM Order WHERE status = 'Ordered')];
         return accounts;
     }
 
-    public static List<Account> AccountsWithOrders(set<Id> setAccountIds) {
+    public static List<Account> AllAccountsWithOrders() {
         List<Account> accounts = [SELECT Id, Turnover__c, 
         (SELECT TotalAmount,NetAmount__c, ShipmentCost__c, AccountId FROM Orders WHERE status = 'Ordered') 
-        FROM Account WHERE Id IN :setAccountIds];
+        FROM Account ];
         return accounts;
     }
 
@@ -29,12 +28,13 @@ public with sharing class QueriesService {
         return orders;
     }
 
-    public static List<Account> AllAccountsWithOrders() {
+    public static List<Account> AccountsWithOrders(set<Id> setAccountIds) {
         List<Account> accounts = [SELECT Id, Turnover__c, 
         (SELECT TotalAmount,NetAmount__c, ShipmentCost__c, AccountId FROM Orders WHERE status = 'Ordered') 
-        FROM Account ];
+        FROM Account WHERE Id IN :setAccountIds];
         return accounts;
     }
+    
 
 
 }    

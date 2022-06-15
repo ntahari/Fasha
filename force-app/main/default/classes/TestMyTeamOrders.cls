@@ -5,7 +5,7 @@ private class TestMyTeamOrders {
         //Add Acounts 
         List<Account> accts = TestDataFactory.createAccounts(1);
 
-        // Add 5 Order with shipmentCost = 0
+        // Add 5 Orders with shipmentCost = 0
         List<Order> orders = TestDataFactory.createOrders(accts, 5, 0);
         
         // Add OrderItem with quantity of item = 10 AND price unity = 150 and Update Orders 

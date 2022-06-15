@@ -10,11 +10,10 @@ public class TestDataFactory{
         List<Order> orders = createOrders(accts, numOrdersPerAcct, 100);
         // Add OrderItem with quantity of item = 10 AND price unity = 150 and Update Orders
         createOrderItem(orders, 10, 150);
-        List<Account> acctsData = [SELECT Turnover__c FROM Account];
-        System.debug('account in createAccountOrders: '+ acctsData);
         return accts;
     }
 
+    // Create Accounts
     public static List<Account> createAccounts(Integer numAccts){
         List<Account> accts = new List<Account>();
         for (Integer i = 0; i < numAccts; i++){
